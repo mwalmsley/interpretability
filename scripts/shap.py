@@ -1,6 +1,8 @@
 import shap
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
+
 
 def nhwc_to_nchw(x: np.ndarray) -> torch.Tensor:
     if x.ndim == 4:
@@ -18,10 +20,10 @@ def nchw_to_nhwc(x: torch.Tensor) -> np.ndarray:
     else:
         raise ValueError(f"Unsupported number of dimensions: {x.ndim}")
 
-def predict(img: np.ndarray) -> torch.Tensor:
+def predict(img: np.ndarray, model: torch.nn.Module) -> torch.Tensor:
     img = torch.Tensor(img)
     img = nhwc_to_nchw(img)
-    img = img.to(device)
+    img = img.to(model.device)
     output = model(img)
     return output
 
@@ -44,12 +46,13 @@ def visualize_shap_values(shap_values, input_data: np.ndarray):
         labels=labels_to_plot
     )
 
+# if __name__ == '__main__':
+        
+#     input_batch_np = np.moveaxis(img_tensor.numpy(), 1, 3)
 
-input_batch_np = np.moveaxis(img_tensor.numpy(), 1, 3)
-
-image_shape = input_batch_np[0].shape
-masker_blur = shap.maskers.Image("blur(15,15)", image_shape)
-shap_values = calculate_shap_values(input_batch_np, predict, masker_blur)
+#     image_shape = input_batch_np[0].shape
+#     masker_blur = shap.maskers.Image("blur(15,15)", image_shape)
+#     shap_values = calculate_shap_values(input_batch_np, predict, masker_blur)
 
 
-visualize_shap_values(shap_values, input_batch_np)
+#     visualize_shap_values(shap_values, input_batch_np)
