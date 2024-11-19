@@ -22,17 +22,13 @@ def composed_transforms(dataset_name: str):
         ),
         A.ToFloat(max_value=255., always_apply=True),
         ToTensorV2()
-    ]
+        ]
     else: 
         transforms_to_apply = [
-          # may reconsider, but interesting to avoid interpolation
-            A.CenterCrop(
-                height=224,  # after crop resize
-                width=224,
-                always_apply=True
-            ),
+            A.Resize(height=224, width=224, always_apply=True),  # resize smaller images
+            A.CenterCrop(height=224, width=224, always_apply=True),
             A.ToFloat(max_value=255., always_apply=True),
-          ToTensorV2()
+            ToTensorV2(),
         ]
 
     composed_transforms = A.Compose(transforms_to_apply)
